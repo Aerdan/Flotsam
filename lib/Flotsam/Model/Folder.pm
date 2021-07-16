@@ -20,7 +20,7 @@ use Mojo::Base -base, -signatures;
 
 has 'pg';
 
-sub add_folder ($self, $user_id, $title, $blurb, $about) {
+sub folder_add ($self, $user_id, $title, $blurb, $about) {
     return $self->pg->db->insert('folders', {
         user_id  => $user_id,
         title    => $title,
@@ -31,15 +31,15 @@ sub add_folder ($self, $user_id, $title, $blurb, $about) {
     }, {returning => 'folder_id'})->hash->{folder_id};
 }
 
-sub list_folders_by_user ($self, $user_id) {
+sub folder_list_by_user ($self, $user_id) {
     return $self->pg->db->select('folders', [qw(folder_id title blurb created modified)], {user_id => $user_id})->hashes->array;
 }
 
-sub delete_folder ($self, $folder_id) {
+sub folder_delete ($self, $folder_id) {
     return $self->pg->db->delete('folders', {folder_id => $folder_id});
 }
 
-sub get_folder ($self, $folder_id) {
+sub folder_get ($self, $folder_id) {
     return $self->pg->db->select('folders', [qw(title blurb created modified about)], {folder_id => $folder_id})->hash;
 }
 

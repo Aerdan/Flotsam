@@ -20,16 +20,28 @@ use Mojo::Base -base, -signatures;
 
 has 'pg';
 
-sub add_user ($self, $display, $email) {
+sub user_add ($self, $display, $email) {
     return $self->pg->db->insert('users', {display_name => $display, email => $email}, {returning => 'user_id'})->hash->{user_id};
 }
 
-sub list_users ($self) {
+sub user_exists ($self, $user_id) {
+    my $ret = 0;
+    if ($self->pg->db->select('users', [qw(user_id)], {user_id => $user_id})->hash->{user_id} == $user_id) {
+        $ret = 1;
+    }
+    return $ret;
+}
+
+sub user_list ($self) {
     return $self->pg->db->select('users', [qw(user_id display_name email email_ok mfa_ok)])->hashes->array;
 }
 
-sub delete_user_by_id ($self, $user_id) {
+sub user_delete_by_id ($self, $user_id) {
     return $self->pg->db->delete('users', {user_id => $user_id});
+}
+
+sub user_get ($self, $user_id) {
+    return $self->pg->db->select('users', [qw(user_id display_name email email_ok mfa_ok)], {user_id => $user_id})->hash;
 }
 
 1;

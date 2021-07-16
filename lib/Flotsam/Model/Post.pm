@@ -20,7 +20,7 @@ use Mojo::Base -base, -signatures;
 
 has 'pg';
 
-sub add_post($self, $user_id, $folder_id, $title, $content) {
+sub post_add($self, $user_id, $folder_id, $title, $content) {
     my %post = (
         user_id => $user_id,
         title => $title,
@@ -34,18 +34,18 @@ sub add_post($self, $user_id, $folder_id, $title, $content) {
     return $self->pg->db->insert('posts', \%post, { returning => 'post_id'})->hash->{post_id};
 }
 
-sub list_posts_by_user($self, $user_id) {
+sub post_list_by_user($self, $user_id) {
     return $self->pg->db->select('posts', [qw(post_id user_id folder_id title created modified)], {user_id => $user_id})->hashes->array;
 }
-sub list_posts_by_folder($self, $folder_id) {
+sub post_list_by_folder($self, $folder_id) {
     return $self->pg->db->select('posts', [qw(post_id user_id title created modified)], {folder_id => $folder_id})->hashes->array;
 }
 
-sub delete_post($self, $post_id) {
+sub post_delete($self, $post_id) {
     return $self->pg->db->delete('posts', {post_id => $post_id});
 }
 
-sub get_post($self, $post_id) {
+sub post_get($self, $post_id) {
     return $self->pg->db->select('posts', [qw(user_id title folder_id title created modified content)], {post_id => $post_id})->hash;
 }
 
