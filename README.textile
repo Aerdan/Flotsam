@@ -1,0 +1,17 @@
+h1. Flotsam
+
+Flotsam is a rich-text pastebin designed primarily for archiving Let's Plays. It intentionally omits support for certain community features, such as comments and private messages, as other platforms are more suitable for communicating with users.
+
+h2. Requirements
+
+You must have the following to run Flotsam:
+
+* "Mojolicious":https://mojolicious.org
+* "Mojo::Pg":https://docs.mojolicious.org/Mojo/Pg
+* "Parse::BBCode":https://metacpan.org/pod/Parse::BBCode
+* A PostgreSQL database
+
+h2. Copyright
+
+Copyright 2021 Síle Ekaterin Aman, under the terms of the Apache 2.0 license. See @LICENSE@ for details.
+
