@@ -5,7 +5,7 @@ create table if not exists posts (
     folder_id foreign key(folders.folder_id),
     title varchar(127) not null,
     created datetime not null,
-    modified datetime,
+    modified datetime not null,
     content text
 );
 
