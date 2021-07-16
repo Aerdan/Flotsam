@@ -5,7 +5,8 @@ create table if not exists users (
     email varchar(127) unique not null,
     email_ok boolean default false,
     mfa varchar(127),
-    mfa_ok boolean default false
+    mfa_ok boolean default false,
+    bio text
 );
 
 -- 1 down

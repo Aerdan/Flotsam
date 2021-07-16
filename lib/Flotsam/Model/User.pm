@@ -44,4 +44,8 @@ sub user_get ($self, $user_id) {
     return $self->pg->db->select('users', [qw(user_id display_name email email_ok mfa_ok)], {user_id => $user_id})->hash;
 }
 
+sub user_profile ($self, $user_id) {
+    return $self->pg->db->select('users', [qw(display_name bio)], {user_id => $user_id})->hash;
+}
+
 1;
