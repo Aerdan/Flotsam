@@ -6,6 +6,8 @@ create table if not exists users (
     email_ok boolean default false,
     mfa varchar(127),
     mfa_ok boolean default false,
+    public boolean default true,
+    tombstone boolean default false,
     bio text
 );
 
