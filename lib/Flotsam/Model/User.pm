@@ -20,32 +20,60 @@ use Mojo::Base -base, -signatures;
 
 has 'pg';
 
-sub user_add ($self, $display, $email) {
+use Authen::TOTP;
+
+sub add ($self, $display, $email) {
     return $self->pg->db->insert('users', {display_name => $display, email => $email}, {returning => 'user_id'})->hash->{user_id};
 }
 
-sub user_exists ($self, $user_id) {
-    my $ret = 0;
-    if ($self->pg->db->select('users', [qw(user_id)], {user_id => $user_id})->hash->{user_id} == $user_id) {
-        $ret = 1;
+sub add_mfa ($self, $email) {
+    return $self->pg->db->update('users', {mfa_ok => 1}, {email => $email}, {returning => 'user_id'})->hash->{user_id};
+}
+
+sub is_mfa_ok ($self, $email) {
+    return $self->pg->db->select('users', [qw(mfa_ok)], {email => $email})->hash->{mfa_ok};
+}
+
+sub is_public ($self, $user_id) {
+    return $self->pg->db->select('users', [qw(public)], {user_id => $user_id})->hash->{public};
+}
+
+sub exists_by_email ($self, $email) {
+    my $user = $self->pg->db->select('users', [qw(user_id email)], {email => $email})->hash;
+
+    if ($user->{email} eq $email)
+        return $user->{user_id};
     }
-    return $ret;
+    return undef;
 }
 
-sub user_list ($self) {
-    return $self->pg->db->select('users', [qw(user_id display_name email email_ok mfa_ok)])->hashes->array;
+sub exists_by_id ($self, $user_id) {
+    my $user = $self->pg->db->select('users', [qw(user_id)], {user_id => $user_id})->hash;
+
+    if ($user->{user_id} == $user_id) {
+        return $user->{user_id};
+    }
+    return undef;
 }
 
-sub user_delete_by_id ($self, $user_id) {
+sub list ($self) {
+    return $self->pg->db->select('users', [qw(id display_name email email_ok mfa_ok)])->hashes->array;
+}
+
+sub delete_by_id ($self, $user_id) {
     return $self->pg->db->delete('users', {user_id => $user_id});
 }
 
-sub user_get ($self, $user_id) {
-    return $self->pg->db->select('users', [qw(user_id display_name email email_ok mfa_ok)], {user_id => $user_id})->hash;
+sub get ($self, $id) {
+    return $self->pg->db->select('users', [qw(id display_name email email_ok mfa_ok)], {user_id => $user_id})->hash;
 }
 
-sub user_profile ($self, $user_id) {
+sub profile ($self, $user_id) {
     return $self->pg->db->select('users', [qw(display_name bio)], {user_id => $user_id})->hash;
+}
+
+sub full_profile ($self, $id) {
+    return $self->pg->db->select('users', [qw(display_name email email_ok mfa_ok bio)], {user_id => $user_id})->hash;
 }
 
 1;
