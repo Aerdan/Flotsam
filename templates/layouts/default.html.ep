@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+    %= include _head
+    <body>
+        <div class="page-content">
+            <div class="container">
+                <aside class="four columns">
+                    %= include _header
+                </aside>
+                <article id="content" class="eight columns">
+                    <div class="wrapper">
+                        <%= content %>
+                    </div>
+                </article>
+            </div>
+            %= include _footer
+        </div>
+    </body>
+</html>

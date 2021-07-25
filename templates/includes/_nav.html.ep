@@ -1,0 +1,8 @@
+<nav>
+    <ul class="page-link">
+        <li><%= link_to '/' => begin %>Home<% end %></li>
+        <li><%= link_to '/user' => begin %>User Panel<% end %></li>
+        <li><%= link_to '/folders' => begin %>Folders <% end %></li>
+        <li><%= link_to '/admin' => begin %>Admin Panel<% end %></li>
+    </ul>
+</nav>
