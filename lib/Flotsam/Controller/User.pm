@@ -81,6 +81,23 @@ sub show_profile ($self, $id) {
     }
 }
 
+sub update_profile ($self, $id, $display, $email, $bio) {
+    my $stored_email = $self->session('email');
+    unless (defined($stored_email)) {
+        $self->redirect_to('no_permission');
+        return;
+    }
+    my $user_id = $self->users->exists_by_email($email);
+    my $can_modify_user = $self->permissions->can_modify_user($user_id);
+
+    if (($user_id == $id) || $can_modify_user) {
+        $self->users->update($id, $display, $email, $bio);
+        $self->redirect_to(full_profile => $self->users->full_profile($id));
+    } else {
+        $self->redirect_to('no_permission');
+    }
+}
+
 sub show_posts ($self, $id) {
     my $email = $self->session('email');
 
